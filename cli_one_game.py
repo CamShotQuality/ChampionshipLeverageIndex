@@ -4,6 +4,7 @@ from basketball_reference_web_scraper.data import OutputType
 import json
 from datetime import datetime
 import pytz
+import time
 
 from utils import convert_utc_to_est, get_standings_dicts
 
@@ -71,62 +72,126 @@ def assert_wins_match_losses(first_dict, second_dict):
     assert total_wins == total_losses, 'Total wins do not equal total losses!'
 
 
-def win_does_team_make_playoffs(east_sim_standings, west_sim_standings, team_name) -> bool:
+def win_playoff_count(east_sim_standings, west_sim_standings, team_name) -> float:
     if team_name in EAST_TEAMS:
         curr_standings = east_sim_standings[team_name]
         east_sim_standings[team_name] = (curr_standings[0] + 1, curr_standings[1])
         final_east_standings_dict = dict(sorted(east_sim_standings.items(), key=lambda item: item[1][0], reverse=True))
-        return team_name in list(final_east_standings_dict.keys())[:8]
+
+        if team_name in list(final_east_standings_dict.keys())[:6]:
+            return 1
+        elif team_name in list(final_east_standings_dict.keys())[:8]:
+            return 0.75
+        elif team_name in list(final_east_standings_dict.keys())[:10]:
+            return 0.25
+        else:
+            return 0
     else:
         curr_standings = west_sim_standings[team_name]
         west_sim_standings[team_name] = (curr_standings[0] + 1, curr_standings[1])
         final_west_standings_dict = dict(sorted(west_sim_standings.items(), key=lambda item: item[1][0], reverse=True))
-        return team_name in list(final_west_standings_dict.keys())[:8]
+
+        if team_name in list(final_west_standings_dict.keys())[:6]:
+            return 1
+        elif team_name in list(final_west_standings_dict.keys())[:8]:
+            return 0.75
+        elif team_name in list(final_west_standings_dict.keys())[:10]:
+            return 0.25
+        else:
+            return 0
 
 
-def loss_does_team_make_playoffs(east_sim_standings, west_sim_standings, team_name):
+def loss_playoff_count(east_sim_standings, west_sim_standings, team_name):
     if team_name in EAST_TEAMS:
         curr_standings = east_sim_standings[team_name]
         east_sim_standings[team_name] = (curr_standings[0], curr_standings[1] + 1)
         final_east_standings_dict = dict(sorted(east_sim_standings.items(), key=lambda item: item[1][0], reverse=True))
-        return team_name in list(final_east_standings_dict.keys())[:8]
+
+        if team_name in list(final_east_standings_dict.keys())[:6]:
+            return 1
+        elif team_name in list(final_east_standings_dict.keys())[:8]:
+            return 0.75
+        elif team_name in list(final_east_standings_dict.keys())[:10]:
+            return 0.25
+        else:
+            return 0
     else:
         curr_standings = west_sim_standings[team_name]
         west_sim_standings[team_name] = (curr_standings[0], curr_standings[1] + 1)
         final_west_standings_dict = dict(sorted(west_sim_standings.items(), key=lambda item: item[1][0], reverse=True))
-        return team_name in list(final_west_standings_dict.keys())[:8]
+
+        if team_name in list(final_west_standings_dict.keys())[:6]:
+            return 1
+        elif team_name in list(final_west_standings_dict.keys())[:8]:
+            return 0.75
+        elif team_name in list(final_west_standings_dict.keys())[:10]:
+            return 0.25
+        else:
+            return 0
 
 
 def main():
     games_today, games_after_today = get_rest_of_season_schedule()
-    cli_game = games_today[0]
-    print('We are going to calculate importance of :' + str(cli_game))
 
-    east_standings_dict, west_standings_dict = get_standings_dicts()
-    assert_wins_match_losses(east_standings_dict, west_standings_dict)
+    playoff_prob_diff_dict = {}
 
-    games_to_simulate = games_after_today + games_today[1:]
-    simulated_game_winners_list = simulate_remaining_games(games_to_simulate)
+    for cli_game in games_today:
+        print('We are going to calculate importance of ' + str(cli_game))
+        start_time = time.time()  # Start time logging
 
-    east_simulated_standings_dict = get_simulated_final_standings(east_standings_dict.copy(), EAST_TEAMS, simulated_game_winners_list, cli_game)
-    west_simulated_standings_dict = get_simulated_final_standings(west_standings_dict.copy(), WEST_TEAMS, simulated_game_winners_list, cli_game)
+        east_standings_dict, west_standings_dict = get_standings_dicts()
+        assert_wins_match_losses(east_standings_dict, west_standings_dict)
 
-    # assert_wins_match_losses(east_simulated_standings_dict, west_simulated_standings_dict)
+        # Remove cli_game from games_today
+        games_today_without_cli = [game for game in games_today if game != cli_game]
+        # Concatenate games_today without cli_game with games_after_today
+        games_to_simulate = games_after_today + games_today_without_cli
 
-    # todo: update these to be counter variables
-    first_team_win_make_playoffs_bool = win_does_team_make_playoffs(east_simulated_standings_dict.copy(), west_simulated_standings_dict.copy(), cli_game[0])
-    first_team_lose_make_playoffs_bool = loss_does_team_make_playoffs(east_simulated_standings_dict.copy(), west_simulated_standings_dict.copy(), cli_game[0])
+        assume_first_team_wins_playoff_count = 0
+        assume_first_team_loses_playoff_count = 0
 
-    second_team_win_make_playoffs_bool = win_does_team_make_playoffs(east_simulated_standings_dict.copy(), west_simulated_standings_dict.copy(), cli_game[1])
-    second_team_lose_make_playoffs_bool = loss_does_team_make_playoffs(east_simulated_standings_dict.copy(), west_simulated_standings_dict.copy(), cli_game[1])
+        assume_second_team_wins_playoff_count = 0
+        assume_second_team_loses_playoff_count = 0
 
-    print('Assuming a win, the ' + cli_game[0] + " would make the playoffs: " + str(first_team_win_make_playoffs_bool))
-    print('Assuming a loss, the ' + cli_game[0] + " would make the playoffs: " + str(first_team_lose_make_playoffs_bool))
+        for _ in range(0, SIMULATION_COUNT):
+            simulated_game_winners_list = simulate_remaining_games(games_to_simulate)
 
-    print('Assuming a win, the ' + cli_game[1] + " would make the playoffs: " + str(second_team_win_make_playoffs_bool))
-    print('Assuming a loss, the ' + cli_game[1] + " would make the playoffs: " + str(second_team_lose_make_playoffs_bool))
+            east_simulated_standings_dict = get_simulated_final_standings(east_standings_dict.copy(), EAST_TEAMS, simulated_game_winners_list, cli_game)
+            west_simulated_standings_dict = get_simulated_final_standings(west_standings_dict.copy(), WEST_TEAMS, simulated_game_winners_list, cli_game)
 
-    # todo: simulate this 25000 times and return difference in above counter variables
+            # takes a lot of time
+            # assert_wins_match_losses(east_simulated_standings_dict, west_simulated_standings_dict)
+
+            assume_first_team_wins_playoff_count += win_playoff_count(east_simulated_standings_dict.copy(), west_simulated_standings_dict.copy(), cli_game[0])
+            assume_first_team_loses_playoff_count += loss_playoff_count(east_simulated_standings_dict.copy(), west_simulated_standings_dict.copy(), cli_game[0])
+
+            assume_second_team_wins_playoff_count += win_playoff_count(east_simulated_standings_dict.copy(), west_simulated_standings_dict.copy(), cli_game[1])
+            assume_second_team_loses_playoff_count += loss_playoff_count(east_simulated_standings_dict.copy(), west_simulated_standings_dict.copy(), cli_game[1])
+
+        first_team_win_playoff_prob = round(100 * (assume_first_team_wins_playoff_count / SIMULATION_COUNT), 2)
+        first_team_loss_playoff_prob = round(100 * (assume_first_team_loses_playoff_count / SIMULATION_COUNT), 2)
+        first_team_playoff_prob_diff = first_team_win_playoff_prob - first_team_loss_playoff_prob
+
+        second_team_win_playoff_prob = round(100 * (assume_second_team_wins_playoff_count / SIMULATION_COUNT), 2)
+        second_team_loss_playoff_prob = round(100 * (assume_second_team_loses_playoff_count / SIMULATION_COUNT), 2)
+        second_team_playoff_prob_diff = second_team_win_playoff_prob - second_team_loss_playoff_prob
+
+        # add playoff margins to dictionary
+        playoff_prob_diff_dict[cli_game[0]] = round(first_team_playoff_prob_diff, 2)
+        playoff_prob_diff_dict[cli_game[1]] = round(second_team_playoff_prob_diff, 2)
+
+        print(f"Assuming a win, the {cli_game[0]} would make the playoffs: {first_team_win_playoff_prob:.2f}% of the time")
+        print(f"Assuming a loss, the {cli_game[0]} would make the playoffs: {first_team_loss_playoff_prob:.2f}% of the time")
+        print(f"Assuming a win, the {cli_game[1]} would make the playoffs: {second_team_win_playoff_prob:.2f}% of the time")
+        print(f"Assuming a loss, the {cli_game[1]} would make the playoffs: {second_team_loss_playoff_prob:.2f}% of the time")
+        end_time = time.time()  # End time logging
+
+        print(f"Time taken for processing: {end_time - start_time:.2f} seconds")
+        print()
+
+    sorted_playoff_prob_diff_dict = dict(sorted(playoff_prob_diff_dict.items(), key=lambda item: item[1], reverse=True))
+    for k, v in sorted_playoff_prob_diff_dict.items():
+        print(f'{k} has a playoff swing percentage of {v}% tonight')
 
 
 if __name__ == '__main__':
