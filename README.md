@@ -31,7 +31,7 @@ Since championship data in the mid-1900's likely isn't as relevant as data from 
 - 7th Seed: 0 
 - 8th Seed: 0 
 
-Since this is such a small dataset, we will also take a look at finals runner-ups post merger in an attempt to get a larger sample size: 
+Since this is such a small dataset, we will also look at finals runner-ups post-merger in an attempt to gain a better understanding of how seed relates to title odds: 
 - 1st Seed: 19 
 - 2nd Seed: 15 
 - 3rd Seed: 5 
