@@ -61,7 +61,7 @@ Guassian Smoothing (aka Gaussian blur) is a technique used to reduce noise in a 
 A Random Forest Regression model was trained on the output of our Gaussian smoothed dataset to assign championship percentages to each seed. 
 
 Why Random Forest Regression?
-Random forests are particularly effective for smaller datasets because they reduce overfitting (by virtue of the ensembling of many decision trees). Furthermore, overfitting can be mitigated by modifying hyperparameters of the model such as max_depth. The output of the Random Forest Regression Model can be seen below: 
+Random forests are particularly effective for smaller datasets because they reduce overfitting (by virtue of the ensembling of many decision trees). Furthermore, overfitting can be mitigated by modifying hyperparameters of the model such as max_depth. In a modern NBA that's deeper with talent than ever before, ensuring we aren't overfitting to prior training data of the past is key .The output of the Random Forest Regression Model can be seen below: 
 
 Championship Percentages for Each Seed:
 - 1st Seed: 35.3%
