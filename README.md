@@ -18,4 +18,27 @@ Seeds 7 and 8 - 75% playoff chance
 By similar logic as above
 
 How do you determine what championship % to assign to each seed?
-[Good question]
+The vast majority of NBA titles have been won by one of the top 3 seeds in either conference(97.4%). The champion has been a 1 seed in 51/77(66.2%) NBA Finals. Only 2 titles were won by a team with a 4 seed or higher. However, simply assigning championship % to seeds based on historical data would mean that 5, 7 and 8 seeds would have a 0% chance of winning the title (6 seed has won 1 NBA title). Clearly, these seeds do not have a 0% chance of winning the NBA title. Furthermore, the league is deeper and more talented than it has ever been - an 8 seed made the finals as recently as last year. 
+
+Since championship data in the mid-1900's likely isn't as relevant as data from more recent NBA history, we will look at data post NBA-ABA merger (1977 onwards). Championships won by seed post-1977 can be found below: 
+
+1st Seed: 30 times
+2nd Seed: 8 times
+3rd Seed: 8 times
+6th Seed: 1 time
+
+Since this is such a small dataset, we will also take a look at finals runner-ups post merger: 
+1st Seed: 19 times
+2nd Seed: 15 times
+3rd Seed: 5 times
+4th Seed: 4 times 
+5th Seed: 1 time
+6th Seed: 1 time
+7th Seed: 0 times
+8th Seed: 2 times
+
+To give a more realistic representation of the likelihood of each seed winning the title in today's NBA, a Random Forest Regression model was trained on previous championship history. A Random Forest Regression model was chosen due to its ability to avoid overfitting as an ensemble model. To further mitigate overfitting, a max depth was enforced on the model. Below are the championship outputs for the Random Forest Regression Model: 
+
+
+
+
