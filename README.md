@@ -2,7 +2,9 @@
 
 **What is this?**
 
-This project aims to calculate a Championship Leverage Index(cLI) for each game in a nightly NBA Slate.  cLI measures the importance of a game to a team's chances of winning the NBA title. For each team game, we run 25,000 coin-toss simulations of the remainder of the season twice. In the first simulation, we assume the team won the game in question. In the second simulation, we assume the team lost the game in question. The difference between the team's NBA Title win probabilities after a win and a loss measures the importance this game has on the team's NBA Title win probability.
+This project aims to calculate a Championship Leverage Index(cLI) for each game in a nightly NBA Slate.  cLI measures the importance of a game to a team's chances of winning the NBA title. For each team game, we run 25,000 coin-toss simulations of the remainder of the season twice. 
+
+In the first simulation, we assume the team won the game in question. In the second simulation, we assume the team lost the game in question. The difference between the team's NBA Title win probabilities after a win and a loss measures the importance this game has on the team's NBA Title win probability.
 
 cLI was initially created to quantify the importance of each game in the MLB. More in-depth descriptions can be found below: 
 - [Championship Leverage Index](https://www.baseball-reference.com/about/wpa.shtml#:~:text=While%20Leverage%20Index%20(LI)%20measures,of%20winning%20the%20World%20Series.)
@@ -12,8 +14,8 @@ cLI is normalized so that the average game is equal to 1.00.  In the case of cLI
 
 **What is each file?**
 
-- `baseline_cli.py`: script to derive the importance of an opening night game to a team's NBA Title win probability
-- `cli.py`: script to derive importance of each game to each team for today's nightly NBA slate
+- `cli.py`: Script to derive importance of each game to a team's NBA Title win probability
+- `baseline_cli.py`: Script to derive the importance of an opening night game to a team's NBA Title win probability
 - `gaussian.py`: Applies Gaussian Smoothing to NBA Title historical data for training data purposes
 - `random_forest_regressor.py`: RandomForestRegressor used to predict NBA Title Percentage for each seed. Trained on Gaussian-smoothed historical data post NBA/ABA merger
 - `constants.py`: Contains constants used across different files
@@ -33,13 +35,13 @@ To run the script, pull the repository and run the `main()` function from the `c
 1. Uses [basketball_reference_web_scraper](https://pypi.org/project/basketball_reference_web_scraper/) library to get:
    - Current standings
    - Remaining Schedule
-2. Loops through each game tonight
+2. Loops through each game from today:
    - Calculate title % assuming Team A wins
    - Calculate title % assuming Team A loses
    - Calculate title % assuming Team B wins
    - Calculate title % assuming Team B loses
    - Calculate marginal title % difference for both Teams A and B
-3. For each marginal title % difference, normalize against opening night (0.94)
+3. For each marginal title % difference, normalize against opening night to derive an average of 1.00
 4. Print out cLI for each team/game to console
 
 **How do you calculate title % after assuming a win or loss?**
@@ -61,7 +63,7 @@ Since championship data from the mid-1900's likely isn't as relevant as data fro
 - 7th Seed: 0 
 - 8th Seed: 0 
 
-Since this is such a small dataset, we will also look at finals runner-ups post-merger in an attempt to gain a better understanding of how seed relates to title odds: 
+Since this is such a small dataset, we will also consider finals runner-ups post-merger in an attempt to gain a better understanding of how seeding relates to title odds: 
 - 1st Seed: 19 
 - 2nd Seed: 15 
 - 3rd Seed: 5 
@@ -81,9 +83,9 @@ This yields the following dataset for finals appearances by seed post-merger:
 - 7th Seed: 0 
 - 8th Seed: 2 
 
-While lumping finals runner-up appearances together with finals titles may not be a completely fair assumption (seeds 4-8 have collectively won 1 out of the 9 finals they appeared in), this doubles our sample size and still gives us a decent barometer of how likely a team is to win the title based on their seed. 
+While lumping finals runner-up appearances in with finals titles may not be a completely fair assumption (seeds 4 through 8 are collectively `1-8` in finals they appeared in post-merger), this doubles our sample size and still gives us a pretty good barometer of how likely a team is to win the title based on their seed. 
 
-With a relatively small training data set, we are prone to picking up noise due to random variation that isn't necessarily representative of true championship odds for each seed. In an effort to combat this, Guassian Smoothing was applied to the dataset to reduce noise and generalize to unseen data better.  
+With a relatively small training dataset, we are prone to picking up noise due to random variation that isn't necessarily representative of true championship odds for each seed. In an effort to combat this, Guassian Smoothing was applied to the dataset to reduce noise and generalize to unseen data better.  
 
 **How is the play-in tourney handled?**
 
@@ -91,7 +93,7 @@ Seeds 9 and 10 (heading into tourney) - `25%` at 8 seed
 
 9/10 seeds must win 2 games to make the playoffs as the 8 seed. For simplicity sake, both teams are assigned a `50%` chance of winning this game. After winning this game, the 9/10 seed plays the loser of 7/8 matchup for the 8 seed. Again, we assign a `50%` win chance to this game as well. Assuming independence from game to game yields: 
 
-`50%` * `50%` yields a `25%` to become the 8 seed.
+`50%` * `50%` = `25%` to become the 8 seed.
 
 Seeds 7 and 8 (heading into tourney) - `50%` at 7 seed, `25%` 8 seed (By similar logic as above )
 
@@ -103,7 +105,7 @@ A Random Forest Regression model was trained on the output of our Gaussian smoot
 
 **Why Random Forest Regression?**
 
-Random forests are particularly effective for smaller datasets because they reduce overfitting (by virtue of the ensembling of many decision trees). Furthermore, overfitting can be mitigated by modifying hyperparameters of the model such as max_depth. In a modern NBA that's deeper with talent than ever before, ensuring we aren't overfitting to prior training data of the past is key. The output of the Random Forest Regression Model can be seen below: 
+Random forests can be particularly effective for smaller datasets because they can reduce overfitting through the ensembling of many decision trees. Furthermore, overfitting can be mitigated by tuning hyperparameters of the each individual Decision Tree such as max depth. The output of the Random Forest Regression Model can be seen below: 
 
 Championship Percentages for Each Seed:
 - 1st Seed: `35.3%`
