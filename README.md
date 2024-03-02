@@ -10,7 +10,7 @@ cLI was initially created to quantify the importance of each game in the MLB. Mo
 - [Championship Leverage Index](https://www.baseball-reference.com/about/wpa.shtml#:~:text=While%20Leverage%20Index%20(LI)%20measures,of%20winning%20the%20World%20Series.)
 - [Championship Win Probability](https://www.sports-reference.com/blog/2020/09/__trashed-2/)
 
-cLI is normalized so that the average game is equal to 1.00.  In the case of cLI, 1.00 represents a game on opening night during the current `7-8`, `9-10` play-in format. During this era, the average game on opening day has a difference of about `.94` percentage points on NBA Title win probability.
+cLI is normalized so that the average game is equal to 1.00.  In the case of cLI, 1.00 represents a game on opening night during the current `7-8`, `9-10` play-in format. During this era, the average game on opening day has a difference of about `.88` percentage points on NBA Title win probability.
 
 **What is each file?**
 
