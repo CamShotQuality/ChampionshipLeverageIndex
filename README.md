@@ -84,30 +84,33 @@ With a relatively small training data set, we are prone to picking up noise due 
 
 **How is the play-in tourney handled?**
 
-Seeds 9 and 10 - 25% playoff chance (8 seed)
-9/10 seeds must win 2 games to make the playoffs as the 8 seed. As there is likely not a huge difference in talent level between the 9 and 10 seed - both teams are assigned a 50% chance of winning this game. After winning this game, the 9/10 seed plays the loser of 7/8 matchup for the 8 seed. Assuming there is not a huge difference in talent level between winner of 9/10 and loser of 7/8, we assign a 50% win chance to this game as well. Assuming independence - 50% * 50% yields a 25% chance to make the playoffs. 
+Seeds 9 and 10 (heading into tourney) - `25%` at 8 seed 
 
-Seeds 7 and 8 - 75% playoff chance (50% 7 seed, 25% 8 seed) 
-By similar logic as above 
+9/10 seeds must win 2 games to make the playoffs as the 8 seed. For simplicity sake, both teams are assigned a `50%` chance of winning this game. After winning this game, the 9/10 seed plays the loser of 7/8 matchup for the 8 seed. Again, we assign a `50%` win chance to this game as well. Assuming independence from game to game yields: 
+
+`50%` * `50%` yields a `25%` to become the 8 seed.
+
+Seeds 7 and 8 (heading into tourney) - `50%` at 7 seed, `25%` 8 seed (By similar logic as above )
 
 **How does Guassian Smoothing work?**
 
-Guassian Smoothing[] is a technique used to reduce noise in a dataset by averaging values of neighboring data points using a Gaussian distribution. While most commonly used in image recognition software to reduce image noise, it applies well to this dataset due to sharp transitions between adjacent points. 
+Guassian Smoothing is a technique used to reduce noise in a dataset by averaging values of neighboring data points using a Gaussian distribution. While most commonly used in image recognition software to reduce image noise, it applies well to this dataset due to its ability to smooth sharp transitions between adjacent points.
 
 A Random Forest Regression model was trained on the output of our Gaussian smoothed dataset to assign championship percentages to each seed. 
 
 **Why Random Forest Regression?**
+
 Random forests are particularly effective for smaller datasets because they reduce overfitting (by virtue of the ensembling of many decision trees). Furthermore, overfitting can be mitigated by modifying hyperparameters of the model such as max_depth. In a modern NBA that's deeper with talent than ever before, ensuring we aren't overfitting to prior training data of the past is key. The output of the Random Forest Regression Model can be seen below: 
 
 Championship Percentages for Each Seed:
-- 1st Seed: 35.3%
-- 2nd Seed: 30.3%
-- 3rd Seed: 18.5%
-- 4th Seed: 8.6%
-- 5th Seed: 3.5%
-- 6th Seed: 1.5%
-- 7th Seed: 1.1%
-- 8th Seed: 1.1%
+- 1st Seed: `35.3%`
+- 2nd Seed: `30.3%`
+- 3rd Seed: `18.5%`
+- 4th Seed: `8.6%`
+- 5th Seed: `3.5%`
+- 6th Seed: `1.5%`
+- 7th Seed: `1.2%`
+- 8th Seed: `1.1%`
 
 
 
