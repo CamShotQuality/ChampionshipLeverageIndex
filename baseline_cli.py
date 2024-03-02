@@ -17,7 +17,7 @@ def main():
         start_time = time.time()  # Start time logging
         print('We are simulating for ' + str(cli_game))
 
-        # VALIDITY CHECK
+        # VALIDITY CHECK - commented out for runtime purposes
         # assert_wins_match_losses(east_standings_dict, west_standings_dict)
 
         # Remove cli_game from games_today
