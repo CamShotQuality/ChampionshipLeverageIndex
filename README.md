@@ -4,17 +4,20 @@
 
 This project aims to calculate a Championship Leverage Index(cLI) for each game in a nightly NBA Slate.  cLI measures the importance of a game to a team's chances of winning the NBA title. For each team game, we run 25,000 coin-toss simulations of the remainder of the season twice. In the first simulation, we assume the team won the game in question. In the second simulation, we assume the team lost the game in question. The difference between the team's NBA Title win probabilities after a win and a loss measures the importance this game has on the team's NBA Title win probability.
 
-cLI was initially created to quanitfy the importance of each game in the MLB and descriptions can be found below: 
+cLI was initially created to quantify the importance of each game in the MLB. More in-depth descriptions can be found below: 
 - [Championship Leverage Index](https://www.baseball-reference.com/about/wpa.shtml#:~:text=While%20Leverage%20Index%20(LI)%20measures,of%20winning%20the%20World%20Series.)
 - [Championship Win Probability](https://www.sports-reference.com/blog/2020/09/__trashed-2/)
 
-cLI is normalized so that the average game is equal to 1.00.  In the case of cLI, 1.00 represents a game on opening night during the current 7-8, 9-10 play-in format. During this era, the average game on opening day has a difference of about `.94` percentage points of NBA Title win probability.
+cLI is normalized so that the average game is equal to 1.00.  In the case of cLI, 1.00 represents a game on opening night during the current `7-8`, `9-10` play-in format. During this era, the average game on opening day has a difference of about `.94` percentage points on NBA Title win probability.
 
 **What is each file?**
 
 - `baseline_cli.py`: script to derive the importance of an opening night game to a team's NBA Title win probability
 - `cli.py`: script to derive importance of each game to each team for today's nightly NBA slate
-- `gaussian.py`: Applies [Gaussian Smoothing]() NBA Title historical data 
+- `gaussian.py`: Applies Gaussian Smoothing to NBA Title historical data for training data purposes
+- `random_forest_regressor.py`: RandomForestRegressor used to predict NBA Title Percentage for each seed. Trained on Gaussian-smoothed historical data post NBA/ABA merger
+- `constants.py`: Contains constants used across different files
+- `utils.py`: Contains utility functions used across different files
 
 **How can I run the script?**
 
