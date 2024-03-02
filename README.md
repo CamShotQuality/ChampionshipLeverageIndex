@@ -12,7 +12,7 @@ cLI was initially created to quanitfy the importance of each game in the MLB and
 
 For each NBA game being played on a given day, we calculate both team's chance of making the playoffs assuming a win and assuming a loss. This percentage is derived from a Monte-Carlo style simulation of 25k coin flips. 
 
-Each percentage difference is then normalized against the marginal difference of a win on opening night. The marginal difference of a win on opening night was determined empirically by running the `baseline_cli.py` file. This value is about 0.85%. 
+Each percentage difference is then normalized against the marginal difference of a win on opening night. The marginal difference of a win on opening night was determined empirically by running the `baseline_cli.py` file. This value is about 0.94%. It is hardcoded to minimize script runtime. 
 
 **How can I run the script?**
 
