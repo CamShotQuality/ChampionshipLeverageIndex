@@ -2,9 +2,9 @@
 
 **What is this?**
 
-This project aims to calculate a Championship Leverage Index(cLI) for each game in a nightly NBA Slate.  cLI measures the importance of a game to a team's chances of winning the NBA title. For each team game, we run 25,000 coin-toss simulations of the remainder of the season twice. 
+This project aims to calculate a Championship Leverage Index(cLI) for each game in a nightly NBA Slate.  cLI measures the importance of a game to a team's chances of winning the NBA title. For each team game, we run 25,000 coin-toss simulations of the remainder of the season. 
 
-In the first simulation, we assume the team won the game in question. In the second simulation, we assume the team lost the game in question. The difference between the team's NBA Title win probabilities after a win and a loss measures the importance this game has on the team's NBA Title win probability.
+First, we assume the team won the game in question and use the simulated remaining games to calculate their chances of winning the NBA title. Then, we assume the team lost the game in question and use the simulated remaining games to calculate their chances of winning the NBA title. The difference between the team's NBA Title win probabilities after a win and a loss measures the importance this game has on the team's NBA Title win probability.
 
 cLI was initially created to quantify the importance of each game in the MLB. More in-depth descriptions can be found below: 
 - [Championship Leverage Index](https://www.baseball-reference.com/about/wpa.shtml#:~:text=While%20Leverage%20Index%20(LI)%20measures,of%20winning%20the%20World%20Series.)
