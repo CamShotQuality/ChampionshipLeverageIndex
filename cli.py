@@ -64,10 +64,11 @@ def process_games(games_today, games_after_today):
         games_today_without_cli = [game for game in games_today if game != cli_game]
 
         # simulate remaining games
-        (
-            assume_first_team_wins_title_count, assume_first_team_loses_title_count,
-            assume_second_team_wins_title_count, assume_second_team_loses_title_count
-        ) = simulate_game(cli_game, games_after_today, games_today_without_cli)
+        assume_first_team_wins_title_count, \
+        assume_first_team_loses_title_count, \
+        assume_second_team_wins_title_count, \
+        assume_second_team_loses_title_count = \
+            simulate_game(cli_game, games_after_today, games_today_without_cli)
 
         # print title percentages to console
         first_team_title_prob_diff, second_team_title_prob_diff = print_title_percentages(
@@ -79,8 +80,7 @@ def process_games(games_today, games_after_today):
         title_team_prob_diff_dict[cli_game[1]] = round(second_team_title_prob_diff, 2)
 
         title_game_prob_diff_dict[cli_game[0] + ' vs. ' + cli_game[1]] = (
-            round(first_team_title_prob_diff, 2) + round(second_team_title_prob_diff, 2)
-        )
+                round(first_team_title_prob_diff, 2) + round(second_team_title_prob_diff, 2))
 
         end_time = time.time()
         print(f"Time taken for processing this game: {end_time - start_time:.2f} seconds")
