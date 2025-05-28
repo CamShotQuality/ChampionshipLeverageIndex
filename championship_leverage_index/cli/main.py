@@ -1,7 +1,9 @@
 import time
+from datetime import datetime
 
-from constants import EAST_TEAMS, SIMULATION_COUNT, WEST_TEAMS
-from utils import (
+from championship_leverage_index.core.constants import EAST_TEAMS, SIMULATION_COUNT, WEST_TEAMS
+from championship_leverage_index.core.config import SEASON_END_YEAR, REGULAR_END, REGULAR_START
+from championship_leverage_index.core.utils import (
     get_current_standings_dicts, coin_toss_simulate, print_title_percentages,
     print_cli_stats, get_simulated_final_standings, get_title_count,
     get_rest_of_season_schedule, assert_wins_match_losses
@@ -50,16 +52,13 @@ def simulate_game(cli_game, games_after_today, games_today_without_cli):
     )
 
 
-def process_games(games_today, games_after_today):
+def process_games(games_today, games_after_today, date=None):
     title_team_prob_diff_dict = {}
     title_game_prob_diff_dict = {}
 
     # loop through each game today
     for cli_game in games_today:
         print('We are going to calculate cLI of ' + str(cli_game))
-
-        # for logging of script runtime purposes
-        start_time = time.time()
 
         games_today_without_cli = [game for game in games_today if game != cli_game]
 
@@ -83,16 +82,22 @@ def process_games(games_today, games_after_today):
                 round(first_team_title_prob_diff, 2) + round(second_team_title_prob_diff, 2))
 
         end_time = time.time()
-        print(f"Time taken for processing this game: {end_time - start_time:.2f} seconds")
         print()
 
     # print cLI to console
     print_cli_stats(title_team_prob_diff_dict, title_game_prob_diff_dict)
 
 
-def main():
+def main(date=None):
+    # check if we're out of regular season (April 15th to October 20th)
+    today = datetime.now().date() if date is None else datetime.strptime(date, '%Y-%m-%d').date()
+    
+    if REGULAR_END <= today <= REGULAR_START:
+        print("Only regular season is supported at this time :(")
+        return
+
     games_today, games_after_today = get_rest_of_season_schedule()
-    process_games(games_today, games_after_today)
+    process_games(games_today, games_after_today, date)
 
 
 if __name__ == '__main__':

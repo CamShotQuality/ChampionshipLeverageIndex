@@ -12,23 +12,64 @@ cLI was initially created to quantify the importance of each game in the MLB. Mo
 
 cLI is normalized so that the average game is equal to 1.00.  In the case of cLI, 1.00 represents a game on opening night during the current `7-8`, `9-10` play-in format. During this era, the average game on opening day has a difference of about `.88` percentage points on NBA Title win probability.
 
-**What is each file?**
+**Installation**
 
-- `cli.py`: Script to derive importance of each game to a team's NBA Title win probability
-- `baseline_cli.py`: Script to derive the importance of an opening night game to a team's NBA Title win probability
-- `gaussian.py`: Applies Gaussian Smoothing to NBA Title historical data for training data purposes
-- `random_forest_regressor.py`: RandomForestRegressor used to predict NBA Title Percentage for each seed. Trained on Gaussian-smoothed historical data post NBA/ABA merger
-- `constants.py`: Contains constants used across different files
-- `utils.py`: Contains utility functions used across different files
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/ChampionshipLeverageIndex.git
+cd ChampionshipLeverageIndex
+```
+
+2. Create and activate a virtual environment (recommended):
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows, use: venv\Scripts\activate
+```
+
+3. Install the package in development mode:
+```bash
+pip install -e .
+```
+
+This will install the package and all its dependencies, including:
+- basketball_reference_web_scraper
+
+**Project Structure**
+
+```
+championship_leverage_index/
+├── core/                    # Core functionality
+│   ├── __init__.py
+│   ├── constants.py        # Constants used across the project
+│   ├── config.py          # Configuration settings
+│   └── utils.py           # Utility functions
+├── cli/                    # Command-line interface
+│   ├── __init__.py
+│   ├── main.py            # Main CLI implementation
+│   └── baseline.py        # Baseline CLI implementation
+├── models/                 # Statistical models
+│   ├── __init__.py
+│   ├── gaussian.py        # Gaussian smoothing implementation
+│   └── random_forest_regressor.py  # Random forest model
+└── src/                   # Source directory
+    ├── cli.py            # Entry point for main CLI
+    └── baseline_cli.py   # Entry point for baseline CLI
+```
 
 **How can I run the script?**
 
-To run the script, pull the repository and run the `main()` function from the `cli.py` file. For each NBA game on a given day, it will print to console:
+After installation, you can run either:
+- `python src/cli.py` for the main CLI
+- `python src/baseline_cli.py` for the baseline CLI
+
+For each NBA game on a given day, it will print to console:
 - Title odds assuming win/loss for Team A
 - Title odds assuming win/loss for Team B
 - cLI for Team A
 - cLI for Team B
 - Game cLI
+
+Note: Only regular season games are supported at this time.
 
 **How does it work?**
 

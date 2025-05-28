@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.ndimage import gaussian_filter1d
 
-from constants import NBA_FINALS_APP_BY_SEED
+from championship_leverage_index.core.constants import NBA_FINALS_APP_BY_SEED
 
 if __name__ == '__main__':
     # NBA Finals appearances by seed since merger (1976-1977)

@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 
-from constants import NBA_SEEDS, NBA_FINALS_APP_BY_SEED_GAUSSIAN_SMOOTHED
+from championship_leverage_index.core.constants import NBA_SEEDS, NBA_FINALS_APP_BY_SEED_GAUSSIAN_SMOOTHED
 
 if __name__ == '__main__':
     # Historical championship wins by seed

@@ -1,8 +1,8 @@
 import time
 
-from constants import EAST_TEAMS, SIMULATION_COUNT, WEST_TEAMS, EAST_OPENING_STANDINGS, \
+from championship_leverage_index.core.constants import EAST_TEAMS, SIMULATION_COUNT, WEST_TEAMS, EAST_OPENING_STANDINGS, \
     WEST_OPENING_STANDINGS
-from utils import coin_toss_simulate, \
+from championship_leverage_index.core.utils import coin_toss_simulate, \
     print_title_percentages, print_opening_night_swing_pct, get_simulated_final_standings, get_title_count, \
     get_beginning_of_season_schedule
 
@@ -65,9 +65,6 @@ def main():
 
         title_team_prob_diff_dict[cli_game[0]] = round(first_team_title_prob_diff, 2)
         title_team_prob_diff_dict[cli_game[1]] = round(second_team_title_prob_diff, 2)
-
-        end_time = time.time()  # End time logging
-        print(f"Time taken for processing this game: {end_time - start_time:.2f} seconds\n")
 
     print_opening_night_swing_pct(title_team_prob_diff_dict)
 

@@ -5,12 +5,13 @@ from datetime import datetime
 import pytz
 import random
 
-from constants import OPENING_NIGHT_CLI, SIMULATION_COUNT, CONF_SEED_CHAMPIONSHIP_ODDS, EAST_TEAMS
+from .constants import OPENING_NIGHT_CLI, SIMULATION_COUNT, CONF_SEED_CHAMPIONSHIP_ODDS, EAST_TEAMS
+from .config import SEASON_END_YEAR
 
 
 # helper functions that rely on upstream dependency basketball_reference_web_scraper library
 def get_current_standings_dicts():
-    standings_json = client.standings(season_end_year=2024, output_type=OutputType.JSON)
+    standings_json = client.standings(season_end_year=SEASON_END_YEAR, output_type=OutputType.JSON)
     data = json.loads(standings_json)
 
     east_standings = {}
@@ -34,7 +35,7 @@ def get_current_standings_dicts():
 
 
 def get_rest_of_season_schedule():
-    schedule_json = client.season_schedule(season_end_year=2024, output_type=OutputType.JSON)
+    schedule_json = client.season_schedule(season_end_year=SEASON_END_YEAR, output_type=OutputType.JSON)
     nba_schedule = json.loads(schedule_json)
 
     for game in nba_schedule:
@@ -56,7 +57,7 @@ def get_rest_of_season_schedule():
 
 
 def get_schedule_today():
-    schedule_json = client.season_schedule(season_end_year=2024, output_type=OutputType.JSON)
+    schedule_json = client.season_schedule(season_end_year=SEASON_END_YEAR, output_type=OutputType.JSON)
     nba_schedule = json.loads(schedule_json)
 
     # Update start_time values in the list to be EST
@@ -74,14 +75,14 @@ def get_schedule_today():
 
 def get_beginning_of_season_schedule():
     # first 15 games include all 30 teams, treat as if it were one day v
-    schedule_json = client.season_schedule(season_end_year=2024, output_type=OutputType.JSON)
+    schedule_json = client.season_schedule(season_end_year=SEASON_END_YEAR, output_type=OutputType.JSON)
     nba_schedule = json.loads(schedule_json)
 
     for game in nba_schedule:
         game['start_time'] = convert_utc_to_est(game['start_time'])
 
     # each of first 15 games this year contain unique teams (30 in total)
-    # ref: https: // www.basketball - reference.com / leagues / NBA_2024_games.html
+    # ref: https: // www.basketball - reference.com / leagues / NBA_2025_games.html
     first_fifteen_games_dict = nba_schedule[:15]
     remaining_games_dict = nba_schedule[15:]
 
@@ -93,7 +94,7 @@ def get_beginning_of_season_schedule():
 
 
 def get_whole_season_schedule():
-    schedule_json = client.season_schedule(season_end_year=2024, output_type=OutputType.JSON)
+    schedule_json = client.season_schedule(season_end_year=SEASON_END_YEAR, output_type=OutputType.JSON)
     nba_schedule = json.loads(schedule_json)
 
     for game in nba_schedule:
